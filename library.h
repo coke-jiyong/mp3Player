@@ -31,21 +31,16 @@ struct song {
 
 void add_song(char* artist, char* title, char* path);
 void init();
-Artist* find_artist(char* name);
-Artist* add_artist(char* name);
-Artist* create_artist_instance(char* name);
-Song * create_song_instance(Artist* ptr_artist, char *  title,char * path);
-Snode* create_snode_instance(Song* song);
-void insert_node(Snode* snode, Artist* artist);
 void status();
 void clear_memory();
-void clear_snode(Snode* snode);
-void clear_song(Song* song);
-void print_artist(Artist* artist);
-void print_snode(Snode* snode);
 void load(FILE* fp);
 void search_song(char * name, char * title);
 void search_song_by_only_name(char* name);
+void play(int index);
+void delete_by_index(int index);
+void save(char* file_name);
+
+
 #endif
 
 

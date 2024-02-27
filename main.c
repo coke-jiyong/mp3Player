@@ -8,6 +8,9 @@ void process_command();
 void handle_add();
 void handle_load();
 void handle_search();
+void handle_play();
+void handle_remove();
+void handle_save();
 
 int main() 
 {	
@@ -16,22 +19,6 @@ int main()
 	process_command();
 	return 0;
 }
-
-void handle_load()
-{
-	char data_file_name[BUF_SIZE];
-	printf("Data file name ? ");
-	if (read_line(stdin, data_file_name, BUF_SIZE) <= 0)
-		return;
-	FILE* fp = fopen(data_file_name, "r");
-	if (fp == NULL) {
-		printf("No such file exist.\n");
-		return;
-	}
-	load(fp);
-	fclose(fp);
-}
-
 
 
 void process_command() 
@@ -51,15 +38,15 @@ void process_command()
 		else if (!strcmp(command, "search")) {
 			handle_search();
 		}
-		/*else if (!strcmp(command, "remove")) {
-			handle_search();
-		}
 		else if (!strcmp(command, "play")) {
-			handle_search();
+			handle_play();
 		}
-		else if (!strcmp(command, "save as")) {
-			handle_search();
-		}*/
+		else if (!strcmp(command, "remove")) {
+			handle_remove();
+		}
+		else if (!strcmp(command, "save")) {
+			handle_save();
+		}
 		else if (!strcmp(command, "status")) {
 			status();
 		}
@@ -67,8 +54,54 @@ void process_command()
 			clear_memory();
 			break;
 		}
-
+		else {
+			printf("Invalid command.\n");
+			continue;
+		}
 	}
+}
+
+void handle_save() 
+{
+	char* as = strtok(NULL, " ");
+	if (as == NULL) {
+		printf("Invalid command.(savs as [file name])\n");
+		return;
+	}
+	if (strcmp(as, "as")) {
+		printf("Invalid command.(savs as [file name])\n");
+		return;
+	}
+	char* file_name = strtok(NULL, " ");
+	if (file_name == NULL) {
+		printf("Invalid command.(savs as [file name])\n");
+		return;
+	}
+	save(file_name);
+
+}
+
+
+void handle_play() 
+{
+	char* id_str = strtok(NULL, " ");
+	int index = atoi(id_str);
+	play(index);
+}
+
+void handle_load()
+{
+	char data_file_name[BUF_SIZE];
+	printf("Data file name ? ");
+	if (read_line(stdin, data_file_name, BUF_SIZE) <= 0)
+		return;
+	FILE* fp = fopen(data_file_name, "r");
+	if (fp == NULL) {
+		printf("No such file exist.\n");
+		return;
+	}
+	load(fp);
+	fclose(fp);
 }
 
 void handle_search() 
@@ -108,5 +141,16 @@ void handle_add() {
 	//printf("[debug]=%s %s %s\n", artist, title, path); 
 
 	add_song(artist, title, path);
+	free(artist);	free(title);		free(path);
 }
 
+void handle_remove() 
+{
+	char* remove_index;
+	remove_index = strtok(NULL, " ");
+	if (remove_index == NULL) {
+		printf("index required.\n");
+		return;
+	}
+	delete_by_index(atoi(remove_index));
+}
